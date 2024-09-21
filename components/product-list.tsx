@@ -1,9 +1,9 @@
 "use client";
 
-import { InitialProducts } from "@/app/products/page";
+import { InitialProducts } from "@/app/(tabs)/home/page";
 import ListProduct from "./list-product";
 import { useState, useRef, useEffect } from "react";
-import { getMoreProducts } from "@/app/(tabs)/products/actions";
+import { getMoreProducts } from "@/app/(tabs)/home/actions";
 
 interface ProductListProps {
   initialProducts: InitialProducts;
@@ -60,7 +60,7 @@ export default function ProductList({ initialProducts }: ProductListProps) {
   }, [page]);
 
   return (
-    <div className="p-5 flex flex-col gap-5">
+    <div className="p-5 flex flex-col gap-5 mb-20">
       {products.map((product) => (
         <ListProduct key={product.id} {...product} />
       ))}
