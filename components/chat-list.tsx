@@ -23,10 +23,11 @@ export async function ChatList({ chat }: IChatListProps) {
       <div className="w-full h-24 rounded-xl flex items-center px-2 space-x-4 hover:bg-neutral-700 active:bg-neutral-600">
         <div className="rounded-full w-16 h-16 border relative overflow-hidden">
           <Image
-            src={chat.users[0].avatar ?? "avatar.svg"}
+            src={chat.users[0].avatar ?? "/avatar.gif"}
             alt={chat.users[0].username}
             fill
             className="object-cover"
+            unoptimized
           />
         </div>
         <div className="flex justify-between chat-box">
