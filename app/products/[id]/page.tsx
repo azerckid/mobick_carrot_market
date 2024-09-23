@@ -3,8 +3,7 @@ import getSession from "@/lib/session";
 import { formatToWon } from "@/lib/utils";
 import { UserIcon } from "@heroicons/react/24/solid";
 import Image from "next/image";
-import Link from "next/link";
-import { notFound } from "next/navigation";
+import { notFound, redirect } from "next/navigation";
 import {
   unstable_cache as nextCache,
   revalidatePath,
@@ -12,10 +11,12 @@ import {
 } from "next/cache";
 
 async function getIsOwner(userId: number) {
-  // const session = await getSession();
-  // if (session.id) {
-  //   return session.id === userId;
-  // }
+  const session = await getSession();
+  console.log("sessionID", session.id);
+  console.log("userId", userId);
+  if (session.id) {
+    return session.id === userId;
+  }
   return false;
 }
 
@@ -79,9 +80,38 @@ export default async function ProductDetail({
     return notFound();
   }
   const isOwner = await getIsOwner(product.userId);
+  console.log("isOwner", isOwner);
   const revalidate = async () => {
     "use server";
     revalidateTag("xxxx");
+  };
+
+  const createChatRoom = async () => {
+    "use server";
+    const session = await getSession();
+    const room = await db.chatRoom.create({
+      data: {
+        users: {
+          connect: [
+            {
+              id: product.userId,
+            },
+            {
+              id: session.id,
+            },
+          ],
+        },
+      },
+      select: {
+        id: true,
+      },
+    });
+    redirect(`/chats/${room.id}`);
+  };
+
+  const moveChatLists = async () => {
+    "use server";
+    redirect(`/chats`);
   };
 
   return (
@@ -90,6 +120,7 @@ export default async function ProductDetail({
         <Image
           fill
           src={`${product.photo}/public`}
+          sizes="500px"
           alt={product.title}
           className="object-cover"
         />
@@ -126,12 +157,11 @@ export default async function ProductDetail({
             </button>
           </form>
         ) : null}
-        <Link
-          className="flex items-center justify-center bg-orange-500 px-5 py-2.5 rounded-md text-white font-semibold"
-          href={``}
-        >
-          채팅하기
-        </Link>
+        <form action={moveChatLists}>
+          <button className="bg-orange-500 px-5 py-2.5 rounded-md text-white font-semibold">
+            채팅
+          </button>
+        </form>
       </div>
     </div>
   );

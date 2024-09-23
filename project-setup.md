@@ -59,3 +59,13 @@ npx prisma generate
 ```bash
 openssl rand -base64 32
 ```
+
+SUPABASE
+
+```
+npm install @supabase/supabase-js
+```
+
+```bash
+
+```
