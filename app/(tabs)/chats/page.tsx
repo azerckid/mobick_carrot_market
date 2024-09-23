@@ -1,49 +1,45 @@
-import Link from "next/link"; // next/link import 추가
+"use server";
+import { ChatList } from "@/components/chat-list";
 import db from "@/lib/db";
 import getSession from "@/lib/session";
+import { notFound } from "next/navigation";
 
-async function getChatRooms() {
+export default async function Chats() {
   const session = await getSession();
-  if (!session) {
-    throw new Error("You must be logged in to view chat rooms.");
-  }
-
-  const chatRooms = await db.chatRoom.findMany({
+  const id = session.id;
+  const me = await db.user.findUnique({
+    where: {
+      id,
+    },
+  });
+  if (!me) return notFound();
+  const chats = await db.chatRoom.findMany({
     where: {
       users: {
         some: {
-          id: session.id,
+          id: me.id,
         },
       },
     },
+    include: {
+      messages: {
+        orderBy: {
+          created_at: "desc",
+        },
+        take: 1,
+      },
+      users: true,
+    },
   });
-
-  return chatRooms;
-}
-
-interface ChatRoom {
-  id: string;
-  created_at: Date;
-  updated_at: Date;
-}
-
-export default async function ChatList() {
-  const chatRooms = await getChatRooms(); // await 추가
+  console.log(chats);
   return (
-    <div>
-      <h1>Chat Rooms</h1>
-      <ul>
-        {chatRooms.map((room: ChatRoom) => (
-          <div key={room.id}>
-            {/* Link 컴포넌트를 사용하여 클릭 시 리다이렉트 */}
-            <Link href={`/chats/${room.id}`}>
-              <span style={{ cursor: "pointer", color: "white" }}>
-                {"room number >>>"} {room.id}
-              </span>
-            </Link>
-          </div>
+    <div className="p-4">
+      <h1 className="text-2xl font-bold">나의 채팅</h1>
+      <div className="mt-4 flex flex-col space-y-3">
+        {chats.map((chat) => (
+          <ChatList key={chat.id} chat={chat} />
         ))}
-      </ul>
+      </div>
     </div>
   );
 }

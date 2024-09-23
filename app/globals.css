@@ -43,3 +43,6 @@
             ring-1 ring-neutral-200 focus:outline-none focus:ring-2 focus:ring-orange-500 transition;
   }
 }
+.chat-box {
+  width: calc(100% - 5rem);
+}
