@@ -79,6 +79,7 @@ export default async function ProductDetail({
   if (!product) {
     return notFound();
   }
+
   const isOwner = await getIsOwner(product.userId);
   console.log("isOwner", isOwner);
   const revalidate = async () => {
@@ -157,9 +158,16 @@ export default async function ProductDetail({
             </button>
           </form>
         ) : null}
+        {/* 이 제품의 판매자이면 채팅열기 버튼을 보여주지 않아야 한다. */}
+        {/* 해당제품과 판매자와 채팅방을 열어놓은 것이 없다면 새로운 채팅방 만들기 */}
+        <form action={createChatRoom}>
+          <button className="bg-green-500 px-5 py-2.5 rounded-md text-white font-semibold">
+            채팅방만들기
+          </button>
+        </form>
         <form action={moveChatLists}>
           <button className="bg-orange-500 px-5 py-2.5 rounded-md text-white font-semibold">
-            채팅
+            채팅목록
           </button>
         </form>
       </div>
