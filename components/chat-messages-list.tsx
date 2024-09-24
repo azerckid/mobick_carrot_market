@@ -8,9 +8,12 @@ import { useRef, useState, useEffect } from "react";
 import { RealtimeChannel, createClient } from "@supabase/supabase-js";
 import { saveMessage } from "@/app/chats/actions";
 
-const SUPABASE_PUBLIC_KEY =
-  "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlnZmh5ZnRqaGltaXBxenRuaWh2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjY5OTU5NTQsImV4cCI6MjA0MjU3MTk1NH0.RLbSSyJozana_RNIdIFTMW3-B8GEu84CtmE8-QXFjjg";
-const SUPABASE_URL = "https://igfhyftjhimipqztnihv.supabase.co";
+// const SUPABASE_PUBLIC_KEY =
+//   "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6ImlnZmh5ZnRqaGltaXBxenRuaWh2Iiwicm9sZSI6ImFub24iLCJpYXQiOjE3MjY5OTU5NTQsImV4cCI6MjA0MjU3MTk1NH0.RLbSSyJozana_RNIdIFTMW3-B8GEu84CtmE8-QXFjjg";
+// const SUPABASE_URL = "https://igfhyftjhimipqztnihv.supabase.co";
+
+const SUPABASE_PUBLIC_KEY = process.env.NEXT_PUBLIC_SUPABASE_PUBLIC_KEY;
+const SUPABASE_URL = process.env.NEXT_PUBLIC_SUPABASE_URL;
 
 interface ChatMessageListProps {
   initialMessages: InitialChatMessages;
@@ -18,6 +21,10 @@ interface ChatMessageListProps {
   chatRoomId: string;
   username: string;
   avatar: string;
+}
+
+if (!SUPABASE_URL || !SUPABASE_PUBLIC_KEY) {
+  throw new Error("Supabase URL and public key must be provided");
 }
 
 const client = createClient(SUPABASE_URL, SUPABASE_PUBLIC_KEY);
