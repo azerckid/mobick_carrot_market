@@ -107,4 +107,5 @@ model Message {
   userId     Int
 }
 
-//npx prisma migrate dev
+//npx prisma migrate dev --create-only 을 먼저 실행한 후 이상이 없으면 아래 명령어 실행
+//npx prisma migrate dev 
