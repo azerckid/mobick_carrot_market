@@ -10,7 +10,7 @@ export default function Button({
   const router = useRouter();
   return (
     // <button {...props} onClick={() => router.back()}>
-    <button {...props} onClick={() => window.location.reload()}>
+    <button {...props} onClick={() => router.refresh()}>
       {children}
     </button>
   );
